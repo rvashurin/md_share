@@ -90,7 +90,7 @@ Indeed, but the distribution of the confidence term can be task-specific. For ex
 
 While having strong performance in-domain (QA), it falls short on summarization.
 
-At the same time, please recall that we define our multiplicative risk as $r(y, y' \mid x) = u(y \mid x) \dot (1 - s(y, y')$. This can be also viewed as an **additive** risk of the form $r(y, y' \mid x) = u(y \mid x) - u(y \mid x)s(y, y')$. In this formulation, $r_1 = u(y \mid x)$ represents a pure information-theoretic risk, while $r_2 = -u(y \mid x)s(y, y')$ is the risk from the sequence $y$ possibly being a semantic outlier, scaled by the adaptive factor $u(y \mid x)$ to match the signal level of the information-theoretic term. This can be viewed as applying an individual scaling factor in the additive formulation, instead of selecting a common scaling factor for all inputs.
+At the same time, please recall that we define our multiplicative risk as $r(y, y' \mid x) = u(y \mid x) \dot (1 - s(y, y')$. This can be also viewed as an **additive** risk of the form $r(y, y' \mid x) = u(y \mid x) - u(y \mid x)s(y, y')$. In this formulation, $r_1 = u(y \mid x)$ represents a pure information-theoretic risk, while $r_2 = -u(y \mid x)s(y, y')$ is the risk from the sequence $y$ possibly being a semantic outlier, scaled by the adaptive factor $u(y \mid x)$ to match the signal level of the information-theoretic term. This can be viewed as applying an individual scaling factor in the additive formulation, instead of selecting a common scaling factor for all inputs. This makes the explicit choice of scaling factor redundant, and explains the stable behaviour of such form of risk across different tasks.
 
 
 ### aWz6
