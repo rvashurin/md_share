@@ -80,3 +80,27 @@ Indeed, but the distribution of the confidence term can be task-specific. For ex
 | Additive ProbCoCoA PPL (0.9)  | **0.458**        | 0.474         | 0.352         |
 
 While having strong performance in-domain (QA), it falls short on summarization.
+
+#### aWz6
+
+>> I am not convinced but rather think MBR can be consider as a new angle of combing confidence and consistency score...
+   I like this new story and think this is much better motivated that the current version, please consider revise the paper with this version.
+
+TODO
+
+>> Although I think theoretical formulation is missing.
+> Agree on its empirical performance, but again I think this paper lack on the theoretical justification. A way to make this story better is to related to the motivation of how MBR is developed (see previous question).
+
+TODO
+
+> I don't think the authors answered my question well, I am suggesting that in this [paper](https://arxiv.org/abs/2406.15627) regressing uq score with response quality does not seems to make sense other than binary categorical values. - which is related to but not directly refers to calibration.
+
+Can you elaborate on why this approach is not suitable for continuous output scores? As we see it, it was proposed specifically to accommodate for both unbounded UE scores and continuous response correctness.
+
+> Thanks for the error bars, I am wondering how do you select the right scoring function if you do not have a hold out set? It seems like score influence the results quite a lot. (And are you sure these are significant?)
+
+We selected the similarity score function based on its use in modern well-performing methods like https://arxiv.org/abs/2307.01379 as well as based on empirical performance. We stress that we use common similarity function **across all experiments** and thus we did not use a held-out set specifically for this choice.
+
+> Sounds fair, would have been better to explore more scoring functions though.
+
+We have tested 4 scoring functions spanning simple lexical approach like Rouge-L, NLI, semantic similarity and factuality-based similarity functions. Can you elaborate on which kinds of similarity measurement you think would best augment our existing results?
