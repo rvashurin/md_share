@@ -28,11 +28,14 @@ As can be seen, (1) Cocoa methods perform well, consistent with results from sma
 
 > real-world scenarios requiring an **explicit** confidence/uncertainty value within a [0,100%] range for decision-making
 
-We kindly disagree with this statement, as decision-making requires selecting a threshold both for bounded and unbounded uncertainty values. While we agree that well-calibrated (and not just bound to a certain range) uncertainty lends itself easier for interpretation, we kindly point the reviewer to the table with results of isotonic calibration that we provided in the rebuttal. This approach directly ties the uncertainty to the expected quality of the output. We note that for some of the tasks (translation especially), there is no measurable difference in the calibration for **any** of the baselines or proposed methods. We believe that such low sensitivity makes for a poor evaluation approach.
+We agree that in real-world decision-making scenarios, providing scores in an interpretable range (0–100%) is indeed important. We emphasize that the isotonic regression–calibrated scores presented in our rebuttal naturally fall within this range and can therefore be directly communicated to end users.
 
-At the same time, specifically ECE requires binary quality - correct or incorrect. As suggested by reviewer, we apply softmax to the uncertainty values, interpreting result as a probability of correct answer, and report the ECE on QA tasks where binary accuracy can be applicable:
+However, it is important to note that many existing SOTA-methods like Semantic Entropy or SAR, also provide scores that are not bounded to a specific range. In selective generation tasks, the primary concern is the method’s performance on the selection objective itself; scores can subsequently be scaled or fitted to a desired range for presentation to the end user.
 
-**TABLE GOES HERE**
+When it comes to  ECE , while we agree that calibration is an important topic, our focus in this work is on error detection, and we therefore consider calibration to be somewhat out of scope for this submission-hence our original choice of evaluation metrics. It is worth noting that the quality of probabilistic forecasts can be decomposed into calibration and sharpness [1], making calibration only one component of prediction error. Even perfectly calibrated models can perform poorly at prediction, which is why we treat calibration as a secondary metric in our study.  
+
+Traditional calibration metrics like ECE are, since in all but two tasks, evaluation is based on continuous quality scores rather than binary outcomes.
+Thus at the request of the reviewers, we used a known approach (see [2], [3]) to calibrate unbounded scores w.r.t. to expected output quality which we provided in our response. Specifically, we fit an isotonic regression model to map raw scores to observed output quality, and then report the mean squared error (MSE) between the calibrated scores (ranges from 0 to 1) and the actual quality of the text (ranges from 0 1). These allows us to evaluate how close are the UE scores to the actual quality of the text, which is a more relevant metric for our task than traditional ECE.
 
 #### yPFe
 
