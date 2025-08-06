@@ -2,7 +2,11 @@
 
 > **Lack of verbalized confidence baselines**
 
-While we don't have the time to compare CoCoA to verbalized in all settings considered in the paper, we included P(True) [https://arxiv.org/abs/2207.05221] in the baselines list for Gemma-12b experiments we conducted recently. Here are the results:
+Several studies have examined how model size affects the ability to express uncertainty, with Kadavath et al. [1] and Xiong et al. [2] both finding that calibration and failure-prediction performance improve as model size increases and smaller models struggle with a task. Vashurin et al. [3] benchmark several verbalized-confidence methods and report that their performance for 7–8 B models is worse than baselines like MSP or PPL.
+
+To address concerns about model size in relation to verbalized-confidence baselines, we included P(True) [1] among the baselines for the Gemma-12B experiments.
+Unforunately. we did not have the capacity to compare CoCoA with verbalized methods across all settings explored in the paper, the results for this configuration are as follows:
+
 
 | Method          | qa        | ats       | nmt       |
 | :-------------- | :-------- | :-------- | :-------- |
@@ -19,6 +23,8 @@ While we don't have the time to compare CoCoA to verbalized in all settings cons
 | PPL             | 0.551     | 0.217     | 0.557     |
 | SAR             | 0.500     | 0.089     | 0.483     |
 | SemanticEntropy | 0.496     | 0.013     | 0.346     |
+
+As can be seen, (1) Cocoa methods perform well, consistent with results from smaller models. (2) The evaluated verbalized uncertainty method demonstrates weaker performance.
 
 > real-world scenarios requiring an **explicit** confidence/uncertainty value within a [0,100%] range for decision-making
 
