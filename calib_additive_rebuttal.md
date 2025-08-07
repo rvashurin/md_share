@@ -1,51 +1,3 @@
-### Awk2
-
-> **Lack of verbalized confidence baselines**
-
-Several studies have examined how model size affects the ability to express verbalized uncertainty, with Kadavath et al. [1] and Xiong et al. [2] both finding that calibration and failure-prediction performance improve as model size increases and smaller models struggle with a task. Vashurin et al. [3] benchmark several verbalized-confidence methods and report that their performance for 7–8 B models is significantly worse than baselines like MSP or PPL.
-
-To address concerns about model size in relation to verbalized confidence baselines, we included P(True) [1] among the baselines for the new experiments with larger Gemma-12B model.
-Unfortunately, we did not have the capacity to compare CoCoA with verbalized methods across all settings explored in the paper, the results for this configuration are as follows:
-
-
-| Method          | qa        | ats       | nmt       |
-| :-------------- | :-------- | :-------- | :-------- |
-| CocoaMSP        | 0.604     | _0.292_   | **0.632** |
-| CocoaMTE        | _0.626_   | 0.288     | _0.628_   |
-| CocoaPPL        | **0.636** | **0.296** | 0.627     |
-| DegMat          | 0.503     | 0.095     | 0.312     |
-| EigValLaplacian | 0.487     | 0.095     | 0.302     |
-| MSP             | 0.523     | 0.194     | 0.472     |
-| MTE             | 0.525     | 0.189     | 0.593     |
-| MC-NSE          | 0.446     | 0.044     | 0.451     |
-| MC-SE           | 0.480     | 0.012     | 0.340     |
-| PTrue           | 0.133     | 0.056     | 0.032     |
-| PPL             | 0.551     | 0.217     | 0.557     |
-| SAR             | 0.500     | 0.089     | 0.483     |
-| SemanticEntropy | 0.496     | 0.013     | 0.346     |
-
-As can be seen, (1) Cocoa methods perform well, consistent with results from smaller models. (2) The evaluated verbalized uncertainty method demonstrates weaker performance.
-
-> real-world scenarios requiring an **explicit** confidence/uncertainty value within a [0,100%] range for decision-making
-
-We agree that in real-world decision-making scenarios, providing scores in an interpretable range (0–100%) is indeed important. We emphasize that the isotonic regression–calibrated scores presented in our rebuttal naturally fall within this range (they do transform the scores into the same range as the quality score, usually 0–100%) and can therefore be directly communicated to end users.
-
-However, it is important to note that many existing SOTA-methods like Semantic Entropy or SAR, also provide scores that are not bounded to a specific range. In selective generation tasks, the primary concern is the method's performance on the selection objective itself; scores can subsequently be scaled or fitted to a desired range for presentation to the end user.
-
-When it comes to ECE , while we agree that calibration is an important topic, our focus in this work is on error detection, and we therefore consider calibration to be somewhat out of scope for this submission-hence our original choice of evaluation metrics. It is worth noting that the quality of probabilistic forecasts can be decomposed into calibration and sharpness [4], making calibration only one component of prediction error. Even perfectly calibrated models can perform poorly at prediction, which is why we treat calibration as a secondary metric in our study.
-
-
-Traditional calibration metrics like ECE are, since in all but two tasks, evaluation is based on continuous quality scores rather than binary outcomes.
-Thus at the request of the reviewers, we used a known approach (see [5], [6]) to calibrate unbounded scores w.r.t. to expected output quality which we provided in our response. Specifically, we fit an isotonic regression model to map raw scores to observed output quality, and then report the mean squared error (MSE) between the calibrated scores (ranges from 0 to 1) and the actual quality of the text (ranges from 0 1). These allows us to evaluate how close are the UE scores to the actual quality of the text, which is a more relevant metric for our task than traditional ECE.
-
-[1] https://arxiv.org/abs/2207.05221
-[2] https://openreview.net/forum?id=gjeQKFxFpZ
-[3] https://aclanthology.org/2025.tacl-1.11/
-[4] https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf
-[5] https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00737/128713/Benchmarking-Uncertainty-Quantification-Methods
-[6] https://aclanthology.org/2024.emnlp-main.18.pdf
-
-
 ### yPFe
 
 > Regarding the CoCoA-MSP, the top-performing variant in the tables - $U_{MSP}$ does it use the logarithmic  or just the likelihood?
@@ -90,8 +42,20 @@ Indeed, but the distribution of the confidence term can be task-specific. For ex
 
 While having strong performance in-domain (QA), it falls short on summarization.
 
-At the same time, please recall that we define our multiplicative risk as $r(y, y' \mid x) = u(y \mid x) \dot (1 - s(y, y')$. This can be also viewed as an **additive** risk of the form $r(y, y' \mid x) = u(y \mid x) - u(y \mid x)s(y, y')$. In this formulation, $r_1 = u(y \mid x)$ represents a pure information-theoretic risk, while $r_2 = -u(y \mid x)s(y, y')$ is the risk from the sequence $y$ possibly being a semantic outlier, scaled by the adaptive factor $u(y \mid x)$ to match the signal level of the information-theoretic term. This can be viewed as applying an individual scaling factor in the additive formulation, instead of selecting a common scaling factor for all inputs. This makes the explicit choice of scaling factor redundant, and explains the stable behaviour of such form of risk across different tasks.
+We also have tried an additive formulation of the form $r(y, y' \mid x) = u(y \mid x) + u(y \mid x)(1 - s(y,y'))$, where $u(y \mid x)$ in the second term acts like an adaptive scaling factor for the consistency:
 
+| Method                        | llama8b/QA   | llama8b/NMT   | llama8b/SUM   |
+|:------------------------------|:-------------|:--------------|:--------------|
+| CoCoA MSP                     | 0.451        | **0.519**     | 0.378         |
+| CoCoA PPL                     | **0.454**    | 0.481         | **0.387**     |
+| CoCoA MTE                     | 0.447        | 0.478         | 0.380         |
+| Adaptive CoCoA MSP            | 0.430        | 0.429         | 0.353         |
+| Adaptive CoCoA PPL            | 0.418        | 0.424         | 0.384         |
+| Adaptive CoCoA MTE            | 0.409        | 0.430         | 0.376         |
+| Adaptive ProbCoCoA MSP        | 0.449        | 0.478         | 0.041         |
+| Adaptive ProbCoCoA PPL        | 0.423        | 0.430         | **0.387**     |
+
+Sadly, this form of additive risk falls short of the multiplicative CoCoA variations as well.
 
 ### aWz6
 
