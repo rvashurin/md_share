@@ -1,3 +1,20 @@
+### yPFe
+
+> The latest table represents, basically, an interpolation between the multiplicative CoCoA and a Confidence Score?
+
+It can be viewed in that way, yes. We completely agree that an additive formulation of risk would be more grounded in theory, and keeping in mind the issue of different levels of signal in the confidence and consistency terms, we tried to used the confidence term itself to serve as an adaptive scaling factor on consistency. This allows to disentangle the signal from the confidence term from the signal from the consistency term. However, the empirical results still clearly show that multiplicative risk is the one to go for optimal performance across different tasks.
+
+> also not sure what is ProbCoCoA PPL, since PPL is a log space quantity unlike MSP
+
+ProbCoCoA PPL just uses the exponent of the log-perplexity. Indeed it's not really a probability, as it can easily be larger than 1. We added that to cover as much ground as possible with this ablation.
+
+> These are all interesting details and observations, and I hope that the authors will discuss those in their paper.
+
+We will surely expand our ablations with the results obtained during this discussions and augment our theoretical sections with some of the thoughts that were discussed here as well, all in the camera-ready version, if accepted.
+
+We deeply thank the reviewer for the push towards additional empirical confirmation of the method and expanding the ablation substantially. We believe that we have exaustively answered reviewer's concerns during the discussion and kindly ask to revise the final score.
+
+
 ### aWz6
 
 >> I am not convinced but rather think MBR can be consider as a new angle of combing confidence and consistency score...
